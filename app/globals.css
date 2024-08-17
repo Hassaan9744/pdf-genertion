@@ -31,3 +31,18 @@ body {
     text-wrap: balance;
   }
 }
+.crown-background {
+  background-color: black;
+  background-image: url("/main.svg"), url("/blur.svg");
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: auto;
+  @media screen and (max-width: 1024px) {
+    background-size: 550px;
+    background-position: right bottom;
+  }
+  @media screen and (max-width: 540px) {
+    background-size: 400px;
+    background-position: right bottom;
+  }
+}
