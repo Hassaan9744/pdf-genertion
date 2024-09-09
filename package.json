@@ -13,9 +13,12 @@
     "@pdfme/generator": "^4.3.2",
     "@pdfme/schemas": "^4.3.2",
     "@pdfme/ui": "^4.3.2",
+    "@react-pdf/renderer": "^3.4.4",
     "next": "14.2.5",
+    "pdf-lib": "^1.17.1",
     "react": "^18",
     "react-dom": "^18",
+    "react-to-pdf": "^1.0.1",
     "signature_pad": "^5.0.2"
   },
   "devDependencies": {

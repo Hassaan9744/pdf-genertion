@@ -46,3 +46,25 @@ body {
     background-position: right bottom;
   }
 }
+.body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  height: 50px;
+}

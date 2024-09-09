@@ -1,168 +1,201 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { Template } from "@pdfme/common";
-import {
-  text,
-  image,
-  barcodes,
-  rectangle,
-  tableBeta,
-  line,
-  multiVariableText,
-  ellipse,
-} from "@pdfme/schemas";
-import { Designer } from "@pdfme/ui";
-import reportSchema from "@/reportSchema.json";
-import { generate } from "@pdfme/generator";
-import { getFontsData } from "@/lib/utilis";
 
-const fonts = [
-  {
-    url: "/font/Roboto-Light.ttf",
-    fallback: true,
-    label: "RobotoLight",
-  },
-  {
-    url: "/font/Roboto-Regular.ttf",
-    label: "RobotoRegular",
-  },
-  {
-    url: "/font/Roboto-Medium.ttf",
-    label: "RobotoMedium",
-  },
-  {
-    url: "/font/Roboto-Bold.ttf",
-    label: "RobotoBold",
-  },
-  {
-    url: "/font/Roboto-Black.ttf",
-    label: "RobotoExtraBold",
-  },
-];
+import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"; // Adjust the path as needed
+import Report from "./report";
 
-const Page = () => {
-  const designerRef = useRef<HTMLDivElement | null>(null);
-  const designer = useRef<Designer | null>(null);
-  const [templatePreset, setTemplatePreset] = useState<string>(
-    localStorage.getItem("reportTemplate") || ""
-  );
-
-  const getInitialTemplate = (): Template => {
-    const storedTemplate = localStorage.getItem("reportTemplate");
-    if (storedTemplate) {
-      try {
-        const parsedTemplate = JSON.parse(storedTemplate) as Template;
-        return parsedTemplate;
-      } catch (error) {
-        console.error("Failed to parse template from localStorage", error);
-      }
-    }
-    return {
-      basePdf: { width: 612, height: 1008, padding: [0, 0, 0, 0] },
-      schemas: reportSchema,
-    };
-  };
-
-  const template: Template = getInitialTemplate();
-
-  useEffect(() => {
-    getFontsData(fonts).then((font) => {
-      if (designerRef.current) {
-        designer.current = new Designer({
-          domContainer: designerRef.current,
-          template,
-          plugins: {
-            text,
-            rectangle,
-            tableBeta,
-            line,
-            multiVariableText,
-            ellipse,
-            image,
-            qrcode: barcodes.qrcode,
-          },
-          options: { font },
-        });
-
-        designer.current.onSaveTemplate(onSaveTemplate);
-        designer.current.onChangeTemplate(() => {
-          setTemplatePreset("custom");
-        });
-      }
-    });
-  }, []); // Only runs once on mount
-
-  const onSaveTemplate = (template?: Template) => {
-    if (designer.current) {
-      localStorage.setItem(
-        "reportTemplate",
-        JSON.stringify(template || designer.current.getTemplate())
-      );
-      alert("Saved!");
-    }
-  };
-  const tableData = [
-    ["item 1", "700"],
-    ["item 2", "900"],
-    ["item 3", "600"],
-    ["item 4", "700"],
-    ["item 5", "700"],
-    ["item 6", "700"],
-    ["item 7", "700"],
-  ];
-  const inputs = [
-    {
-      file_no: "4034-52",
-      order_no: "dsls4-2ou",
-      company_title: "Company Title",
-      owner_name: "Hassan",
-      address: "2938 Whitetail Lane , Dallas ,Texas",
-      pracel_id: "1234567890",
-      table: tableData,
-      completed_by: "Hassan",
-      compiled_date: "Fri Aug 16 2024",
+const InvoicePage = () => {
+  const data = {
+    order_number: "123sdad",
+    public_work_comments: "asdasdzxczxczxczxczxczxczxczxc",
+    taxes_paid: "yes",
+    enforcement_issues: "yes",
+    tax_paid_year: [
+      {
+        checked: true,
+        label: "2022",
+      },
+      {
+        label: "2023",
+        checked: true,
+      },
+      {
+        checked: false,
+        label: "2024",
+      },
+    ],
+    special_assessment: "yes",
+    user_id: "LpCzpWZsTXbvY5mQzl5sdV1ffYI3",
+    permitting_issues: "yes",
+    services: [
+      {
+        checked: true,
+        label: "water",
+      },
+      {
+        checked: true,
+        label: "water",
+      },
+      {
+        checked: true,
+        label: "water",
+      },
+      {
+        checked: true,
+        label: "water",
+      },
+      {
+        checked: true,
+        label: "water",
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "Sewer",
+        checked: true,
+      },
+      {
+        label: "vx",
+        checked: true,
+      },
+      {
+        label: "vx",
+        checked: true,
+      },
+      {
+        label: "vx",
+        checked: true,
+      },
+    ],
+    owner_names: "Raja Avila",
+    address: "zxczxc@!@#",
+    user_email: "shahzad@vx.com",
+    taxe_comments: " zxczxczxczxczxczxczxczxczxczxc",
+    due_amount: "23123",
+    permitting_violations: "yes",
+    customer_file: "hammad",
+    company_title: "Alexander",
+    taxes_color: "yes",
+    report_date: {
+      seconds: 1724958000,
+      nanoseconds: 0,
     },
-  ];
-  const gennerate = () => {
-    getFontsData(fonts).then((font) => {
-      generate({
-        template,
-        inputs,
-        plugins: {
-          text,
-          image,
-          rectangle,
-          tableBeta,
-          line,
-        },
-        options: { font },
-      }).then((pdf) => {
-        console.log(pdf);
+    permitting_comments: "asdasdzxczxczxczxczxczxczxczxc",
+    enforcement_comments: "asdasdzxczxczxczxczxczxczxczxc",
+    completed_by: "shahzad",
+    utility_liens: "yes",
+  };
+  function createServiceString(services: any) {
+    // Filter the services that are checked
+    const checkedServices = services
+      .filter((service: any) => service.checked)
+      .map((service: any) => service.label);
 
-        // Browser
-        const blob = new Blob([pdf.buffer], { type: "application/pdf" });
-        window.open(URL.createObjectURL(blob));
+    if (checkedServices.length === 0) return "N/A";
 
-        // Node.js
-        // fs.writeFileSync(path.join(__dirname, test.pdf), pdf);
-      });
-    });
+    // Join the labels into a single string with ", " and " & " before the last one
+    if (checkedServices.length === 1) {
+      return checkedServices[0];
+    } else if (checkedServices.length === 2) {
+      return checkedServices.join(" & ");
+    } else {
+      return (
+        checkedServices.slice(0, -1).join(", ") +
+        " & " +
+        checkedServices.slice(-1)
+      );
+    }
+  }
+  const formattedServices = createServiceString(data.services);
+
+  const reportData = {
+    file_no: "4034-52",
+    order_number: data.order_number,
+    company_title: data.company_title,
+    owner_name: data.owner_names,
+    address: data.address,
+    pracel_id: "1234567890",
+    first_year_label: `${data.tax_paid_year[0].label}:`,
+    second_year_label: `${data.tax_paid_year[1].label}:`,
+    third_year_label: `${data.tax_paid_year[2].label}:`,
+    first_year: `${data.tax_paid_year[0].checked ? "Paid" : "Not Paid"}`,
+    second_year: `${data.tax_paid_year[1].checked ? "Paid" : "Not Paid"}`,
+    third_year: `${data.tax_paid_year[2].checked ? "Paid" : "Not Paid"}`,
+    tangible_tax_year: "2021",
+    tangible_tax: "N/A",
+    enforcement_issues: data.enforcement_issues.toUpperCase(),
+    permitting_issues: data.permitting_issues.toUpperCase(),
+    special_assessment: data.special_assessment.toUpperCase(),
+    permitting_violations: data.permitting_violations.toUpperCase(),
+    services: formattedServices.toUpperCase(),
+    due_amount: data.due_amount.toUpperCase(),
+    utility_liens: data.utility_liens.toUpperCase(),
+    taxe_comments: data.taxe_comments,
+    enforcement_comments: data.enforcement_comments,
+    permitting_comments: data.permitting_comments,
+    public_work_comments: data.public_work_comments,
+    compiled_date: "2023-01-01",
+    completed_by: data.completed_by,
+  };
+
+  const getDynamicFontSize = () => {
+    const maxLength = 25; // Set a maximum character length before reducing font size
+    const maxFontSize = 16;
+    const text = "wwwww wwwww wwwww wwwww wwwww wwwww wwwww wwwww wwwww wwwww";
+    const baseFontSize = maxFontSize;
+    const length = text.length;
+    console.log("text", text);
+    console.log("length", length);
+    if (length <= maxLength) return baseFontSize;
+    const adjustedFontSize = Math.max(
+      (maxLength / length) * baseFontSize,
+      8 // Minimum font size
+    );
+
+    console.log("adjustedFontSize", adjustedFontSize);
   };
 
   return (
-    <div>
-      <div style={{ padding: "20px" }}>
-        <button className="me-4 border" onClick={() => onSaveTemplate()}>
-          Save Template
-        </button>
-        <button onClick={() => gennerate()}>Generate</button>
+    <div className="h-screen w-screen flex flex-col items-center justify-center">
+      <div>
+        <PDFDownloadLink
+          document={<Report data={reportData} />}
+          fileName="report.pdf"
+          className="px-4 py-2 rounded-lg border bg-white font-medium"
+        >
+          {({ blob, url, loading, error }) =>
+            loading ? "Loading document..." : "Download Report"
+          }
+        </PDFDownloadLink>
       </div>
-      <div
-        ref={designerRef}
-        style={{ width: "100%", height: "calc(100vh - 64px)" }}
-      ></div>
+      <div className="w-full h-[calc(100vh-4rem)]">
+        <PDFViewer width={"100%"} height={"100%"}>
+          <Report data={reportData} />
+        </PDFViewer>
+      </div>
     </div>
   );
 };
 
-export default Page;
+export default InvoicePage;
